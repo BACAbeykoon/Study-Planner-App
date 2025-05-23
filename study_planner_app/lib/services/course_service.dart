@@ -10,7 +10,10 @@ class CourseService {
       final Map<String, dynamic> data = course.toJson();
 
       // Add the course to the collection
-      await courseCollection.add(data);
+      final docRef = await courseCollection.add(data);
+
+      await docRef.update({'id': docRef.id});
+      print("course Saved");
     } catch (error) {
       print('Error creating course: $error');
     }
