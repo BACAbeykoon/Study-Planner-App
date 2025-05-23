@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:study_planner_app/models/course_model.dart';
+import 'package:study_planner_app/services/course_service.dart';
 import 'package:study_planner_app/widgets/custom_button.dart';
 import 'package:study_planner_app/widgets/custom_input.dart';
 
 class AddNewCourse extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
+
   final TextEditingController _courseNameController = TextEditingController();
   final TextEditingController _courseDescriptionController =
       TextEditingController();
@@ -18,16 +22,47 @@ class AddNewCourse extends StatelessWidget {
 
   void _submitForm(BuildContext context) async {
     if (_formKey.currentState?.validate() ?? false) {
-      // Save form
       _formKey.currentState?.save();
-      print(_courseDescriptionController.text);
+      try {
+        final Course course = Course(
+          id: '',
+          name: _courseNameController.text,
+          description: _courseDescriptionController.text,
+          duration: _courseDurationController.text,
+          schedule: _courseScheduleController.text,
+          instructor: _courseInstructorController.text,
+        );
+
+        await CourseService().createCourse(course);
+
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Course added successfully!'),
+              duration: Duration(seconds: 1),
+            ),
+          );
+        }
+
+        GoRouter.of(context).go('/');
+      } catch (error) {
+        print(error);
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to add course!'),
+              duration: Duration(seconds: 1),
+            ),
+          );
+        }
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: const Text("Add Course")),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Form(
@@ -36,18 +71,18 @@ class AddNewCourse extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                const SizedBox(height: 20),
                 const Text(
                   'Add New Course',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 5),
-
-                //description
                 const Text(
-                  'Fill in the details below to add a new course.And start managing your study planner.',
+                  'Fill in the details below to add a new course. And start managing your study planner.',
                   style: TextStyle(color: Colors.grey, fontSize: 14),
                 ),
                 const SizedBox(height: 20),
+
                 CustomInput(
                   controller: _courseNameController,
                   labelText: 'Course Name',
@@ -99,10 +134,12 @@ class AddNewCourse extends StatelessWidget {
                   },
                 ),
                 const SizedBox(height: 20),
+
                 CustomElevatedButton(
                   text: 'Add Course',
                   onPressed: () => _submitForm(context),
                 ),
+                const SizedBox(height: 20),
               ],
             ),
           ),
