@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:study_planner_app/models/course_model.dart';
 import 'package:study_planner_app/services/course_service.dart';
+import 'package:study_planner_app/utils/util_functions.dart';
 import 'package:study_planner_app/widgets/custom_button.dart';
 import 'package:study_planner_app/widgets/custom_input.dart';
 
@@ -36,24 +37,16 @@ class AddNewCourse extends StatelessWidget {
         await CourseService().createCourse(course);
 
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Course added successfully!'),
-              duration: Duration(seconds: 1),
-            ),
-          );
+          showSnackbar(context: context, text: "Course Added Succsesfully");
         }
+
+        await Future.delayed(const Duration(seconds: 2));
 
         GoRouter.of(context).go('/');
       } catch (error) {
         print(error);
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Failed to add course!'),
-              duration: Duration(seconds: 1),
-            ),
-          );
+          showSnackbar(context: context, text: " Failed to Add Course");
         }
       }
     }
