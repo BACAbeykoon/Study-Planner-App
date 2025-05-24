@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:study_planner_app/models/assignment_model.dart';
 import 'package:study_planner_app/models/course_model.dart';
+import 'package:study_planner_app/services/assignment_service.dart';
+import 'package:study_planner_app/utils/util_functions.dart';
 import 'package:study_planner_app/widgets/custom_button.dart';
 import 'package:study_planner_app/widgets/custom_input.dart';
 
@@ -52,7 +55,30 @@ class AddNewassignment extends StatelessWidget {
 
   void _submitForm(BuildContext context) async {
     if (_formKey.currentState?.validate() ?? false) {
-      print(_assignmentDescriptionController.text);
+      try {
+        final Assignment assignment = Assignment(
+          id: "",
+          name: _assignmentNameController.text,
+          description: _assignmentDescriptionController.text,
+          duration: _assignmentDurationController.text,
+          dueDate: _selectedDate.value,
+          dueTime: _selectedTime.value,
+        );
+
+        AssignmentService().createAssignment(course.id, assignment);
+
+        showSnackbar(
+          context: context,
+          text: "Successfully added the Assignment",
+        );
+
+        await Future.delayed(const Duration(seconds: 2));
+
+        GoRouter.of(context).go('/');
+      } catch (error) {
+        print(error);
+        showSnackbar(context: context, text: "Failed to add Assignment");
+      }
     }
   }
 
