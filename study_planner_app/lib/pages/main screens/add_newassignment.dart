@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:study_planner_app/models/assignment_model.dart';
 import 'package:study_planner_app/models/course_model.dart';
-import 'package:study_planner_app/services/assignment_service.dart';
+import 'package:study_planner_app/services/databases/assignment_service.dart';
 import 'package:study_planner_app/utils/util_functions.dart';
 import 'package:study_planner_app/widgets/custom_button.dart';
 import 'package:study_planner_app/widgets/custom_input.dart';
