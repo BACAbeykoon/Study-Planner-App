@@ -107,7 +107,7 @@ class MainPage extends StatelessWidget {
 
                           return Card(
                             elevation: 0,
-                            color: lightGreen,
+                            color: lightBlue,
                             margin: const EdgeInsets.symmetric(vertical: 8),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
@@ -126,6 +126,11 @@ class MainPage extends StatelessWidget {
                                     fontSize: 12,
                                   ),
                                 ),
+                                onTap: () {
+                                  GoRouter.of(
+                                    context,
+                                  ).push("/single-course", extra: course);
+                                },
                               ),
                             ),
                           );
