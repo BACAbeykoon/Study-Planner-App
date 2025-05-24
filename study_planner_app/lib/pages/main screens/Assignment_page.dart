@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:study_planner_app/Elements/colors.dart';
 import 'package:study_planner_app/models/assignment_model.dart';
+import 'package:study_planner_app/pages/notificationpage.dart';
 import 'package:study_planner_app/services/databases/assignment_service.dart';
+import 'package:study_planner_app/services/databases/notification_service.dart';
 import 'package:study_planner_app/widgets/countdowntimer.dart';
 
 class AssignmentPage extends StatelessWidget {
@@ -12,8 +14,16 @@ class AssignmentPage extends StatelessWidget {
     return await AssignmentService().getAssignmentsWithCourseName();
   }
 
+  Future<void> _checkAndStoreOverdueAssignments() async {
+    await NotificationsService().storeOverdueAssignments();
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Trigger the method when the screen is loaded
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAndStoreOverdueAssignments();
+    });
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -25,7 +35,17 @@ class AssignmentPage extends StatelessWidget {
           ),
         ),
         actions: [
-          IconButton(icon: const Icon(Icons.notifications), onPressed: () {}),
+          IconButton(
+            icon: const Icon(Icons.notifications),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const NotificationsScreen(),
+                ),
+              );
+            },
+          ),
         ],
       ),
       body: FutureBuilder<Map<String, List<Assignment>>>(

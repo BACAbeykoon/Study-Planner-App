@@ -9,6 +9,7 @@ import 'package:study_planner_app/pages/main%20screens/add_new_note.dart';
 import 'package:study_planner_app/pages/main%20screens/add_newassignment.dart';
 import 'package:study_planner_app/pages/main%20screens/single_assingmentpage.dart';
 import 'package:study_planner_app/pages/main%20screens/single_notepage.dart';
+import 'package:study_planner_app/pages/notificationpage.dart';
 import 'package:study_planner_app/pages/single_course.dart';
 
 class RouterClass {
@@ -94,6 +95,13 @@ class RouterClass {
         builder: (context, state) {
           final Note note = state.extra as Note;
           return SingleNoteScreen(note: note);
+        },
+      ),
+      //notifications
+      GoRoute(
+        path: '/notifications',
+        builder: (context, state) {
+          return const NotificationsScreen();
         },
       ),
     ],
