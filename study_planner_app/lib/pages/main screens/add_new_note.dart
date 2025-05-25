@@ -9,6 +9,7 @@ import 'package:study_planner_app/services/databases/note_service.dart';
 import 'package:study_planner_app/utils/util_functions.dart';
 import 'package:study_planner_app/widgets/custom_button.dart';
 import 'package:study_planner_app/widgets/custom_input.dart';
+import 'package:study_planner_app/Elements/colors.dart';
 
 class AddNewnote extends StatefulWidget {
   final Course course;
@@ -64,98 +65,250 @@ class _AddNewnoteState extends State<AddNewnote> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsetsDirectional.symmetric(horizontal: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Add New Note For Your Course',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 5),
-
-              //description
-              const Text(
-                'Fill in the details below to add a new note. And start managing your study planner.',
-                style: TextStyle(color: Colors.grey, fontSize: 14),
-              ),
-              const SizedBox(height: 20),
-              Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomInput(
-                      controller: _titleController,
-                      labelText: "Note Title",
-                      validator: (value) {
-                        if (value?.isEmpty ?? true) {
-                          return 'Please enter a Note Title';
-                        }
-                        return null;
-                      },
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: Container(
+          margin: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: surfaceColor.withOpacity(0.8),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: primaryColor.withOpacity(0.3)),
+          ),
+          child: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: primaryTextColor,
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
+        title: Text(
+          'Add New Note',
+          style: TextStyle(
+            color: primaryTextColor,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body: Container(
+        decoration: BoxDecoration(gradient: backgroundGradient),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header Section
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      gradient: primaryGradient,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: primaryColor.withOpacity(0.3),
+                          blurRadius: 15,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
                     ),
-                    CustomInput(
-                      controller: _sectionController,
-                      labelText: "Note Section",
-                      validator: (value) {
-                        if (value?.isEmpty ?? true) {
-                          return 'Please enter a Note Section';
-                        }
-                        return null;
-                      },
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            Icons.note_add_rounded,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Create Study Note',
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.8),
+                                  fontSize: 14,
+                                ),
+                              ),
+                              Text(
+                                'For ${widget.course.name}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    CustomInput(
-                      controller: _referencesController,
-                      labelText: "Reference Book",
-                      validator: (value) {
-                        if (value?.isEmpty ?? true) {
-                          return 'Please enter the reference Book';
-                        }
-                        return null;
-                      },
+                  ),
+                  const SizedBox(height: 24),
+                  // Note Information Section
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      gradient: cardGradient,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: primaryColor.withOpacity(0.3),
+                        width: 1,
+                      ),
                     ),
-                    CustomInput(
-                      controller: _descriptionController,
-                      labelText: "Description",
-                      validator: (value) {
-                        if (value?.isEmpty ?? true) {
-                          return 'Please enter a Description';
-                        }
-                        return null;
-                      },
-                    ),
-
-                    const Divider(),
-                    const Text(
-                      'Upload Note Image , for better understanding and quick revision',
-                      style: TextStyle(color: Colors.grey, fontSize: 14),
-                    ),
-                    const SizedBox(height: 20),
-
-                    CustomElevatedButton(
-                      text: "Add Note Images",
-                      onPressed: _pickImage,
-                    ),
-                    const SizedBox(height: 20),
-                    // Display selected image
-                    _selectedImage != null
-                        ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
                           children: [
-                            const Text(
-                              'Selected Image:',
+                            Icon(
+                              Icons.info_outline_rounded,
+                              color: primaryColor,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Note Information',
                               style: TextStyle(
-                                fontSize: 16,
+                                color: primaryTextColor,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(height: 10),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        CustomInput(
+                          controller: _titleController,
+                          labelText: 'Note Title',
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a note title';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        CustomInput(
+                          controller: _sectionController,
+                          labelText: 'Note Section',
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a note section';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        CustomInput(
+                          controller: _referencesController,
+                          labelText: 'Reference Book',
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a reference book';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        CustomInput(
+                          controller: _descriptionController,
+                          labelText: 'Description',
+                          maxLines: 3,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a description';
+                            }
+                            return null;
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  // Image Upload Section
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      gradient: cardGradient,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: secondaryColor.withOpacity(0.3),
+                        width: 1,
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.image_rounded,
+                              color: secondaryColor,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Note Image',
+                              style: TextStyle(
+                                color: primaryTextColor,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: secondaryColor.withOpacity(0.2),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: CustomElevatedButton(
+                            onPressed: _pickImage,
+                            text: 'Upload Note Image',
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        if (_selectedImage != null)
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
                               child: Image.file(
                                 File(_selectedImage!.path),
                                 height: 200,
@@ -163,21 +316,67 @@ class _AddNewnoteState extends State<AddNewnote> {
                                 fit: BoxFit.cover,
                               ),
                             ),
-                          ],
-                        )
-                        : const Text(
-                          'No image selected.',
-                          style: TextStyle(fontSize: 16, color: Colors.grey),
-                        ),
-                    const SizedBox(height: 20),
-                    CustomElevatedButton(
-                      text: "Submit Notes",
-                      onPressed: () => _submitForm(context),
+                          )
+                        else
+                          Container(
+                            width: double.infinity,
+                            height: 120,
+                            decoration: BoxDecoration(
+                              color: surfaceColor.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: secondaryColor.withOpacity(0.3),
+                                width: 1,
+                                style: BorderStyle.solid,
+                              ),
+                            ),
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.image_not_supported_rounded,
+                                    color: secondaryTextColor,
+                                    size: 40,
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    'No image selected',
+                                    style: TextStyle(
+                                      color: secondaryTextColor,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 24),
+                  // Submit Button
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: primaryColor.withOpacity(0.3),
+                          blurRadius: 12,
+                          offset: const Offset(0, 6),
+                        ),
+                      ],
+                    ),
+                    child: CustomElevatedButton(
+                      onPressed: () => _submitForm(context),
+                      text: 'Create Note',
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
