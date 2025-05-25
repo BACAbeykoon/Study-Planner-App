@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:study_planner_app/Elements/colors.dart';
 import 'package:study_planner_app/models/assignment_model.dart';
 import 'package:study_planner_app/models/course_model.dart';
 import 'package:study_planner_app/services/databases/assignment_service.dart';
@@ -98,92 +100,215 @@ class AddNewassignment extends StatelessWidget {
                   'Add New Assignment',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 5),
-                const Text(
-                  'Fill in the details below to add a new assignment. And start managing your study planner.',
-                  style: TextStyle(color: Colors.grey, fontSize: 14),
+                // Assignment Details Section
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    gradient: cardGradient,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: primaryColor.withOpacity(0.2),
+                      width: 1,
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Assignment Details',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: primaryTextColor,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      CustomInput(
+                        controller: _assignmentNameController,
+                        labelText: 'Assignment Name',
+                        validator: (value) {
+                          if (value?.isEmpty ?? true) {
+                            return 'Please enter an assignment name';
+                          }
+                          return null;
+                        },
+                      ),
+                      CustomInput(
+                        controller: _assignmentDescriptionController,
+                        labelText: 'Assignment Description',
+                        validator: (value) {
+                          if (value?.isEmpty ?? true) {
+                            return 'Please enter an assignment description';
+                          }
+                          return null;
+                        },
+                      ),
+                      CustomInput(
+                        controller: _assignmentDurationController,
+                        labelText: 'Assignment Duration',
+                        validator: (value) {
+                          if (value?.isEmpty ?? true) {
+                            return 'Please enter the assignment duration';
+                          }
+                          return null;
+                        },
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 20),
-                CustomInput(
-                  controller: _assignmentNameController,
-                  labelText: 'Assignment Name',
-                  validator: (value) {
-                    if (value?.isEmpty ?? true) {
-                      return 'Please enter the assignment name';
-                    }
-                    return null;
-                  },
-                ),
-                CustomInput(
-                  controller: _assignmentDescriptionController,
-                  labelText: 'Assignment Description',
-                  validator: (value) {
-                    if (value?.isEmpty ?? true) {
-                      return 'Please enter the assignment description';
-                    }
-                    return null;
-                  },
-                ),
-                CustomInput(
-                  controller: _assignmentDurationController,
-                  labelText: 'Duration (e.g., 1 hour)',
-                  validator: (value) {
-                    if (value?.isEmpty ?? true) {
-                      return 'Please enter the assignment duration';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-                const Divider(),
-                const Text(
-                  'Due Date and Time',
-                  style: TextStyle(fontSize: 16, color: Colors.white60),
-                ),
-                const SizedBox(height: 16),
-                ValueListenableBuilder<DateTime>(
-                  valueListenable: _selectedDate,
-                  builder: (context, date, child) {
-                    return Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Text(
-                            'Date: ${date.toLocal().toString().split(' ')[0]}',
-                            style: const TextStyle(fontSize: 16),
-                          ),
+                // Due Date & Time Section
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    gradient: cardGradient,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: primaryColor.withOpacity(0.2),
+                      width: 1,
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Due Date & Time',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: primaryTextColor,
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.calendar_today),
-                          onPressed: () => _selectDate(context),
-                        ),
-                      ],
-                    );
-                  },
+                      ),
+                      const SizedBox(height: 20),
+                      // Date Picker
+                      ValueListenableBuilder<DateTime>(
+                        valueListenable: _selectedDate,
+                        builder: (context, selectedDate, child) {
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: 16),
+                            decoration: BoxDecoration(
+                              color: surfaceColor.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: primaryColor.withOpacity(0.3),
+                                width: 1,
+                              ),
+                            ),
+                            child: ListTile(
+                              leading: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: primaryColor.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Icon(
+                                  Icons.calendar_today_rounded,
+                                  color: primaryColor,
+                                  size: 20,
+                                ),
+                              ),
+                              title: Text(
+                                'Due Date',
+                                style: TextStyle(
+                                  color: secondaryTextColor,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              subtitle: Text(
+                                DateFormat(
+                                  'EEEE, MMM dd, yyyy',
+                                ).format(selectedDate),
+                                style: TextStyle(
+                                  color: primaryTextColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              trailing: Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                color: primaryColor,
+                                size: 16,
+                              ),
+                              onTap: () => _selectDate(context),
+                            ),
+                          );
+                        },
+                      ),
+                      // Time Picker
+                      ValueListenableBuilder<TimeOfDay>(
+                        valueListenable: _selectedTime,
+                        builder: (context, selectedTime, child) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              color: surfaceColor.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: primaryColor.withOpacity(0.3),
+                                width: 1,
+                              ),
+                            ),
+                            child: ListTile(
+                              leading: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: secondaryColor.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Icon(
+                                  Icons.access_time_rounded,
+                                  color: secondaryColor,
+                                  size: 20,
+                                ),
+                              ),
+                              title: Text(
+                                'Due Time',
+                                style: TextStyle(
+                                  color: secondaryTextColor,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              subtitle: Text(
+                                selectedTime.format(context),
+                                style: TextStyle(
+                                  color: primaryTextColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              trailing: Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                color: secondaryColor,
+                                size: 16,
+                              ),
+                              onTap: () => _selectTime(context),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-                ValueListenableBuilder<TimeOfDay>(
-                  valueListenable: _selectedTime,
-                  builder: (context, time, child) {
-                    return Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Text(
-                            'Time: ${time.format(context)}',
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.access_time),
-                          onPressed: () => _selectTime(context),
-                        ),
-                      ],
-                    );
-                  },
+                const SizedBox(height: 30),
+
+                // Action Button
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: primaryColor.withOpacity(0.3),
+                        blurRadius: 15,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: CustomElevatedButton(
+                    text: 'Create Assignment',
+                    onPressed: () => _submitForm(context),
+                  ),
                 ),
-                const SizedBox(height: 20),
-                CustomElevatedButton(
-                  onPressed: () => _submitForm(context),
-                  text: "Add Assignment",
-                ),
+                const SizedBox(height: 30),
               ],
             ),
           ),
